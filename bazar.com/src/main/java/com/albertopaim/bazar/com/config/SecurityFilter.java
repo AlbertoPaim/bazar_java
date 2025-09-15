@@ -15,12 +15,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
     TokenService tokenService;
-
     @Autowired
     UserRepository userRepository;
 
@@ -42,6 +40,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         var authHeader = request.getHeader("Authorization");
         if (authHeader == null) return null;
 
-        return authHeader.replace("Bearer", "");
+        return authHeader.replace("Bearer ", "").trim();
     }
 }
