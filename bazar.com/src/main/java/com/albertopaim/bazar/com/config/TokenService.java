@@ -1,6 +1,6 @@
 package com.albertopaim.bazar.com.config;
 
-import com.albertopaim.bazar.com.entities.Users;
+import com.albertopaim.bazar.com.entities.User.Users;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

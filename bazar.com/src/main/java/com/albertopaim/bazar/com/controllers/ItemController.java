@@ -1,6 +1,7 @@
 package com.albertopaim.bazar.com.controllers;
 
-import com.albertopaim.bazar.com.entities.Item;
+import com.albertopaim.bazar.com.controllers.dtos.ItemDto;
+import com.albertopaim.bazar.com.entities.Item.Item;
 import com.albertopaim.bazar.com.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/itens")
@@ -44,9 +47,21 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Item>> getItens (){
+    public ResponseEntity<List<Item>> getItens() {
         List<Item> itens = itemService.getItens();
         return ResponseEntity.ok(itens);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Item> getItemById(@PathVariable String id) {
+        return itemService.getItem(id).map(item -> ResponseEntity.ok(item)).orElseGet(() -> ResponseEntity.notFound().build());
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteItem(@PathVariable String id){
+        itemService.deleteItem(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

@@ -1,9 +1,11 @@
 package com.albertopaim.bazar.com.controllers;
 
 import com.albertopaim.bazar.com.config.TokenService;
-import com.albertopaim.bazar.com.entities.Users;
+import com.albertopaim.bazar.com.controllers.dtos.AuthenticationDto;
+import com.albertopaim.bazar.com.controllers.dtos.LoginResponseDto;
+import com.albertopaim.bazar.com.controllers.dtos.RegisterDto;
+import com.albertopaim.bazar.com.entities.User.Users;
 import com.albertopaim.bazar.com.repositories.UserRepository;
-import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

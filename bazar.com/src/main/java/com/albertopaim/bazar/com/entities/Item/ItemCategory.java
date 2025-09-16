@@ -1,4 +1,4 @@
-package com.albertopaim.bazar.com.entities;
+package com.albertopaim.bazar.com.entities.Item;
 
 public enum ItemCategory {
     ROUPAS,

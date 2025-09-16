@@ -1,5 +1,6 @@
-package com.albertopaim.bazar.com.entities;
+package com.albertopaim.bazar.com.entities.Images;
 
+import com.albertopaim.bazar.com.entities.Item.Item;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

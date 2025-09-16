@@ -1,5 +1,6 @@
-package com.albertopaim.bazar.com.entities;
+package com.albertopaim.bazar.com.entities.Item;
 
+import com.albertopaim.bazar.com.entities.Images.ImagesItens;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

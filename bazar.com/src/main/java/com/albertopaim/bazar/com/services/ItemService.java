@@ -1,6 +1,6 @@
 package com.albertopaim.bazar.com.services;
 
-import com.albertopaim.bazar.com.entities.Item;
+import com.albertopaim.bazar.com.entities.Item.Item;
 import com.albertopaim.bazar.com.repositories.ItensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,15 +19,15 @@ public class ItemService {
         return itensRepository.save(item);
     }
 
-    public List<Item> getItens(){
+    public List<Item> getItens() {
         return itensRepository.findAll();
     }
 
-    public Optional<Item> getItem(UUID id){
+    public Optional<Item> getItem(String id) {
         return itensRepository.findById(id);
     }
 
-    public void deleteItem(UUID id){
+    public void deleteItem(String id) {
         itensRepository.deleteById(id);
     }
 }
