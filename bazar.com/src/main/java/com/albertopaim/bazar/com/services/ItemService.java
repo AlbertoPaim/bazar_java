@@ -27,6 +27,11 @@ public class ItemService {
         return itensRepository.findById(id);
     }
 
+    public void updateItem(Item item){
+
+       itensRepository.save(item);
+    }
+
     public void deleteItem(String id) {
         itensRepository.deleteById(id);
     }

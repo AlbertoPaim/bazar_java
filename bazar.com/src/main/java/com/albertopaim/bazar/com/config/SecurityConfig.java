@@ -30,8 +30,9 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/itens").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/itens/{id}").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/itens/{id}").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/itens/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/itens/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/itens").hasRole("ADMIN")
                                 .anyRequest().authenticated()

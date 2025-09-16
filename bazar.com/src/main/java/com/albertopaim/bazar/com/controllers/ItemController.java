@@ -2,6 +2,7 @@ package com.albertopaim.bazar.com.controllers;
 
 import com.albertopaim.bazar.com.controllers.dtos.ItemDto;
 import com.albertopaim.bazar.com.entities.Item.Item;
+import com.albertopaim.bazar.com.repositories.ItensRepository;
 import com.albertopaim.bazar.com.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,9 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private ItensRepository itensRepository;
 
     @PostMapping
     public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto body) {
@@ -56,6 +60,23 @@ public class ItemController {
     public ResponseEntity<Item> getItemById(@PathVariable String id) {
         return itemService.getItem(id).map(item -> ResponseEntity.ok(item)).orElseGet(() -> ResponseEntity.notFound().build());
 
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Item> updateItem(@PathVariable String id, @RequestBody ItemDto itemDto){
+        Item itemFound = itensRepository.findById(id).orElseThrow(()-> new RuntimeException("Item not found"));
+
+        Item item = itemFound;
+
+        item.setName(itemDto.name());
+        item.setDescription(itemDto.description());
+        item.setPrice(itemDto.price());
+        item.setCategory(itemDto.category());
+        item.setAvailable(itemDto.available());
+
+        itemService.updateItem(item);
+
+        return ResponseEntity.ok(item);
     }
 
     @DeleteMapping("/{id}")
