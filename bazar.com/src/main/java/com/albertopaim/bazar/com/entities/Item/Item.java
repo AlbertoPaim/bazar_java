@@ -29,7 +29,7 @@ public class Item
     private Double price;
     @Column(nullable = false)
     private ItemCategory category;
-    private Boolean available;
+    private Boolean available = true;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImagesItens> images;

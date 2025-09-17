@@ -35,7 +35,6 @@ public class ItemController {
         itemToSave.setDescription(body.description());
         itemToSave.setPrice(body.price());
         itemToSave.setCategory(body.category());
-        itemToSave.setAvailable(body.available());
 
         Item savedItem = this.itemService.createItem(itemToSave);
 
@@ -44,8 +43,7 @@ public class ItemController {
                 savedItem.getName(),
                 savedItem.getDescription(),
                 savedItem.getPrice(),
-                savedItem.getCategory(),
-                savedItem.getAvailable());
+                savedItem.getCategory());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
@@ -63,8 +61,8 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable String id, @RequestBody ItemDto itemDto){
-        Item itemFound = itensRepository.findById(id).orElseThrow(()-> new RuntimeException("Item not found"));
+    public ResponseEntity<Item> updateItem(@PathVariable String id, @RequestBody ItemDto itemDto) {
+        Item itemFound = itensRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
 
         Item item = itemFound;
 
@@ -72,7 +70,6 @@ public class ItemController {
         item.setDescription(itemDto.description());
         item.setPrice(itemDto.price());
         item.setCategory(itemDto.category());
-        item.setAvailable(itemDto.available());
 
         itemService.updateItem(item);
 
@@ -80,7 +77,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteItem(@PathVariable String id){
+    public ResponseEntity deleteItem(@PathVariable String id) {
         itemService.deleteItem(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
