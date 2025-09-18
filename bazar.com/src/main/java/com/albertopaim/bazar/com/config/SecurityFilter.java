@@ -26,6 +26,11 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
 
+        if (request.getRequestURI().equals("/auth/login") || request.getRequestURI().equals("/auth/register")) {
+            filterChain.doFilter(request, response);
+            return; // Retorna para não executar o resto do filtro para essas rotas
+        }
+
         if (token != null) {
             var login = tokenService.validateToken(token);
             UserDetails user = userRepository.findByLogin(login);

@@ -4,6 +4,7 @@ import com.albertopaim.bazar.com.config.TokenService;
 import com.albertopaim.bazar.com.controllers.dtos.AuthenticationDto;
 import com.albertopaim.bazar.com.controllers.dtos.LoginResponseDto;
 import com.albertopaim.bazar.com.controllers.dtos.RegisterDto;
+import com.albertopaim.bazar.com.entities.User.UserRole;
 import com.albertopaim.bazar.com.entities.User.Users;
 import com.albertopaim.bazar.com.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class AuthenticationController {
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        Users newUser = new Users(null, data.login(), encryptedPassword, data.role());
+        Users newUser = new Users(null, data.login(), encryptedPassword, UserRole.CLIENT);
 
         this.userRepository.save(newUser);
 

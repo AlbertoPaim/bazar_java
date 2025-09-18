@@ -1,6 +1,7 @@
 package com.albertopaim.bazar.com.controllers;
 
 import com.albertopaim.bazar.com.controllers.dtos.ItemDto;
+import com.albertopaim.bazar.com.entities.Images.ImagesItens;
 import com.albertopaim.bazar.com.entities.Item.Item;
 import com.albertopaim.bazar.com.repositories.ItensRepository;
 import com.albertopaim.bazar.com.services.ItemService;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,25 +30,11 @@ public class ItemController {
     @Autowired
     private ItensRepository itensRepository;
 
-    @PostMapping
-    public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto body) {
-        Item itemToSave = new Item();
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<Item> createItem(@RequestPart("item") ItemDto dto, @RequestPart("images")List<MultipartFile> images) throws IOException {
+    Item createdItem = itemService.createItem(dto, images);
 
-        itemToSave.setName(body.name());
-        itemToSave.setDescription(body.description());
-        itemToSave.setPrice(body.price());
-        itemToSave.setCategory(body.category());
-
-        Item savedItem = this.itemService.createItem(itemToSave);
-
-        ItemDto responseDto = new ItemDto(
-                savedItem.getId(),
-                savedItem.getName(),
-                savedItem.getDescription(),
-                savedItem.getPrice(),
-                savedItem.getCategory());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdItem);
     }
 
     @GetMapping
