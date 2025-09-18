@@ -18,7 +18,7 @@ public class CloudinaryService {
         this.cloudinary = cloudinary;
     }
 
-    public String upload(MultipartFile file) throws IOException {
+    public Map<String, String> upload(MultipartFile file) throws IOException {
 
         try {
             Map<?, ?> uploadResult = cloudinary.uploader().upload(
@@ -26,10 +26,22 @@ public class CloudinaryService {
                     Map.of("public_id", UUID.randomUUID().toString())
             );
 
-            return (String) uploadResult.get("secure_url");
+            return Map.of("secure_url", (String) uploadResult.get("secure_url"),
+                    "public_id", (String) uploadResult.get("public_id"));
 
         } catch (IOException e) {
             throw new RuntimeException("Não foi possivel fazer o upload da imagem");
+        }
+
+    }
+
+    public void delete(String publicId) throws IOException {
+
+        try {
+            cloudinary.uploader().destroy(publicId, Map.of());
+
+        } catch (IOException e) {
+            throw new RuntimeException("Não foi possivel deletar imagem", e);
         }
 
     }
