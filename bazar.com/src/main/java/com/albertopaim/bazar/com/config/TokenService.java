@@ -1,6 +1,6 @@
 package com.albertopaim.bazar.com.config;
 
-import com.albertopaim.bazar.com.entities.User.Users;
+import com.albertopaim.bazar.com.entities.User.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -17,20 +17,20 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public String generateToken(Users user) {
+    public String generateToken(User user) {
 
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             String token = JWT.create()
                     .withIssuer("auth-api")
-                    .withSubject(user.getLogin())
+                    .withSubject(user.getEmail())
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
             return token;
 
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Error while genarating token", exception);
+            throw new RuntimeException("Erro ao gerar token", exception);
         }
     }
 

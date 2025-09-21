@@ -1,6 +1,8 @@
 package com.albertopaim.bazar.com.entities.User;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,15 +17,16 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Users implements UserDetails {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @Column(nullable = false)
-    private String login;
+    private String email;
     @Column(nullable = false)
     private String password;
+    private String passwordToken;
 
     private UserRole role;
 
@@ -38,7 +41,7 @@ public class Users implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @Override

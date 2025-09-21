@@ -1,4 +1,7 @@
 package com.albertopaim.bazar.com.controllers.dtos;
 
-public record UserUpdatePasswordDto(String password) {
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
+public record UserUpdatePasswordDto(@NotNull @Min(4) String password) {
 }

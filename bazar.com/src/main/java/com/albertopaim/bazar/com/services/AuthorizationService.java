@@ -1,7 +1,6 @@
 package com.albertopaim.bazar.com.services;
 
 import com.albertopaim.bazar.com.repositories.UserRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +16,7 @@ public class AuthorizationService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails user = userRepository.findByLogin(username);
+        UserDetails user = userRepository.findByEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("Usuário não encontrado: " + username);
         }
