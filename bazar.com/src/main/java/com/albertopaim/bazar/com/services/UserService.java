@@ -1,10 +1,8 @@
 package com.albertopaim.bazar.com.services;
 
 import com.albertopaim.bazar.com.controllers.dtos.EmailDto;
-import com.albertopaim.bazar.com.controllers.dtos.UserUpdatePasswordDto;
 import com.albertopaim.bazar.com.entities.User.User;
 import com.albertopaim.bazar.com.repositories.UserRepository;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -12,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,7 +44,7 @@ public class UserService {
     }
 
     public void resetPassword(String token, String password) {
-        Optional<User> userFound = userRepository.findByToken(token);
+        Optional<User> userFound = userRepository.findBypasswordToken(token);
 
         if (userFound.isEmpty()) {
             throw new RuntimeException("Token inválido");
