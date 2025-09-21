@@ -28,7 +28,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (request.getRequestURI().equals("/auth/login") || request.getRequestURI().equals("/auth/register")) {
             filterChain.doFilter(request, response);
-            return; // Retorna para não executar o resto do filtro para essas rotas
+            return;
         }
 
         if (token != null) {

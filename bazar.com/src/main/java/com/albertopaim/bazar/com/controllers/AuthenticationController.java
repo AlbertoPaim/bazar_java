@@ -4,13 +4,19 @@ import com.albertopaim.bazar.com.config.TokenService;
 import com.albertopaim.bazar.com.controllers.dtos.AuthenticationDto;
 import com.albertopaim.bazar.com.controllers.dtos.LoginResponseDto;
 import com.albertopaim.bazar.com.controllers.dtos.RegisterDto;
+import com.albertopaim.bazar.com.controllers.dtos.UserUpdatePasswordDto;
 import com.albertopaim.bazar.com.entities.User.UserRole;
 import com.albertopaim.bazar.com.entities.User.Users;
 import com.albertopaim.bazar.com.repositories.UserRepository;
+import com.albertopaim.bazar.com.services.AuthorizationService;
+import com.albertopaim.bazar.com.services.UserService;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +30,8 @@ public class AuthenticationController {
     private UserRepository userRepository;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationDto data) {
@@ -51,4 +59,12 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
 
     }
+
+    @PutMapping("/reset")
+    public ResponseEntity updateUser(Authentication authentication, @RequestBody UserUpdatePasswordDto dto) {
+        String login = authentication.getName();
+        userService.updateUser(login, dto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }
