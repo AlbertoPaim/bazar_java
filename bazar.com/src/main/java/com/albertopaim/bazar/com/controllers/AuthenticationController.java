@@ -1,15 +1,14 @@
 package com.albertopaim.bazar.com.controllers;
 
 import com.albertopaim.bazar.com.config.TokenService;
-import com.albertopaim.bazar.com.controllers.dtos.AuthenticationDto;
-import com.albertopaim.bazar.com.controllers.dtos.LoginResponseDto;
-import com.albertopaim.bazar.com.controllers.dtos.RegisterDto;
-import com.albertopaim.bazar.com.controllers.dtos.UserUpdatePasswordDto;
+import com.albertopaim.bazar.com.controllers.dtos.*;
 import com.albertopaim.bazar.com.entities.User.UserRole;
 import com.albertopaim.bazar.com.entities.User.User;
 import com.albertopaim.bazar.com.repositories.UserRepository;
+import com.albertopaim.bazar.com.services.EmailService;
 import com.albertopaim.bazar.com.services.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +30,8 @@ public class AuthenticationController {
     private TokenService tokenService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDto data) {
@@ -54,6 +55,9 @@ public class AuthenticationController {
         User newUser = new User(null, data.email(), encryptedPassword,null, UserRole.ADMIN);
 
         this.userRepository.save(newUser);
+
+        EmailDto email = new EmailDto(data.email(), "Cadastro usuario - Vende e Passa", "Parabéns, você acaba de se cadastrar no Vende e Passa! Seja bem vindo(a) e aproveite os itens de nosso Bazar");
+        emailService.EmailSender(email);
 
         return ResponseEntity.ok().build();
 
