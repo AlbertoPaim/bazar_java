@@ -1,13 +1,20 @@
 package com.albertopaim.bazar.com.services;
 
+import com.albertopaim.bazar.com.controllers.dtos.EmailDto;
 import com.albertopaim.bazar.com.controllers.dtos.UserUpdatePasswordDto;
 import com.albertopaim.bazar.com.entities.User.User;
 import com.albertopaim.bazar.com.repositories.UserRepository;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -18,15 +25,47 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void updateUser(String email, UserUpdatePasswordDto dto) {
+    @Autowired
+    private EmailService emailService;
+
+
+    public void forgotPassword(String email) {
         User userFound = (User) userRepository.findByEmail(email);
 
         if (userFound != null) {
-            String encriptedPassword = bCryptPasswordEncoder.encode(dto.password());
-            userFound.setPassword(encriptedPassword);
+            String token = UUID.randomUUID().toString();
+            LocalDateTime tokenExpiration = LocalDateTime.now().plusHours(1);
+
+            userFound.setPasswordToken(token);
+            userFound.setPasswordTokenExpiration(tokenExpiration);
             userRepository.save(userFound);
-        } else {
-            throw new RuntimeException("Usuário não encontrado.");
+
+            String resetLink = "http://localhost:3000/reset?token=" + token;
+
+            emailService.EmailSender(new EmailDto(email, "Redefinição de senha", "Clique aqui para redefinir sua senha: " + resetLink));
         }
     }
+
+    public void resetPassword(String token, String password) {
+        Optional<User> userFound = userRepository.findByToken(token);
+
+        if (userFound.isEmpty()) {
+            throw new RuntimeException("Token inválido");
+        }
+
+        User user = userFound.get();
+
+        if (user.getPasswordTokenExpiration().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Token de redefinição de senha expirado");
+        }
+
+        String newPassword = bCryptPasswordEncoder.encode(password);
+
+        user.setPassword(newPassword);
+        user.setPasswordToken(null);
+        user.setPasswordTokenExpiration(null);
+
+        userRepository.save(user);
+    }
+
 }

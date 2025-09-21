@@ -44,6 +44,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(new LoginResponseDto(token));
     }
 
+
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterDto data) {
 
@@ -52,7 +53,7 @@ public class AuthenticationController {
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User newUser = new User(null, data.email(), encryptedPassword,null, UserRole.ADMIN);
+        User newUser = new User(null, data.email(), encryptedPassword, null, null, UserRole.ADMIN);
 
         this.userRepository.save(newUser);
 
@@ -64,10 +65,16 @@ public class AuthenticationController {
     }
 
     @PutMapping("/reset")
-    public ResponseEntity updateUser(Authentication authentication, @RequestBody UserUpdatePasswordDto dto) {
-        String login = authentication.getName();
-        userService.updateUser(login, dto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<Void> updateUser(@RequestBody ResetPasswordDto dto) {
+        userService.resetPassword(dto.token(), dto.password());
+        return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/forgot-password")
+    public ResponseEntity<Void> resetForgotPassword(@RequestBody String email) {
+        userService.forgotPassword(email);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
