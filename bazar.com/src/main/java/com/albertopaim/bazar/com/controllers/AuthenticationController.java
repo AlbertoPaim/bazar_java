@@ -10,13 +10,18 @@ import com.albertopaim.bazar.com.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("auth")
@@ -39,9 +44,23 @@ public class AuthenticationController {
 
         var auth = this.authenticationManager.authenticate(userNamePassword);
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());
+        User userDetails = (User) auth.getPrincipal();
 
-        return ResponseEntity.ok(new LoginResponseDto(token));
+        var token = tokenService.generateToken(userDetails);
+
+        ResponseCookie jwtCookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .build();
+
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority()).collect(Collectors.toList());
+
+        LoginResponseDto loginResponse = new LoginResponseDto(userDetails.getId(), userDetails.getEmail(), roles);
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(loginResponse);
     }
 
 
