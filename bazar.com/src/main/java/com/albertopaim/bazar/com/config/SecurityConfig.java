@@ -31,7 +31,7 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/login", "/auth/register", "/auth/forgot-password", "/auth/reset-password").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/itens").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/itens/{id}").permitAll()
-                                .requestMatchers(HttpMethod.PUT, "/itens/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/itens/{id}").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/itens/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/itens").hasRole("ADMIN")
                                 .anyRequest().authenticated()
