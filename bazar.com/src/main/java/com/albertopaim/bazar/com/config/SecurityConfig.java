@@ -22,17 +22,18 @@ public class SecurityConfig {
     SecurityFilter securityFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
         return httpSecurity
+                // 1. Habilita o suporte ao CORS dentro do Spring Security
+                .cors(org.springframework.security.config.Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/auth/login", "/auth/register", "/auth/forgot-password", "/auth/reset-password").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/itens").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/itens/{id}").permitAll()
-                                .requestMatchers(HttpMethod.PUT, "/itens/{id}").permitAll()
-                                .requestMatchers(HttpMethod.DELETE, "/itens/{id}").hasRole("ADMIN")
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/itens/**").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/itens/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/itens/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/itens").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
